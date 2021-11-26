@@ -1,3 +1,3 @@
 function pressed(){
-  echo("doing something");
+  alert("doing something");
 }
