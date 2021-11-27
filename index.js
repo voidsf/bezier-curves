@@ -58,7 +58,7 @@ window.onload = function init(){
 
   ctx.textAlign = "center";
 
-  path = calcCurve(10);
+  path = calcCurve(50);
 
 }
 
@@ -79,7 +79,7 @@ document.onmouseup = function(event){
 setInterval(mainLoop, 20);
 function mainLoop(){
 
-  
+
 
   ctx.fillStyle = '#eee';
   ctx.fillRect(0,0,400,400);
@@ -135,6 +135,7 @@ function calcCurve(depth){
     console.log(mmm1.x, +" "+ mmm1.y);
     path.lineTo(mmm1.x, mmm1.y);
   }
+  path.lineTo(point4.x, point4.y);
 
   return path;
 }
@@ -143,7 +144,7 @@ function movePointToMouse(point){
   point.x = Math.floor(Math.max(8,Math.min(392, pointerX)));
   point.y = Math.floor(Math.max(8,Math.min(392, pointerY)));
 
-  path = calcCurve(10);
+  path = calcCurve(50);
 }
 
 function lerp(point1, point2, factor){
