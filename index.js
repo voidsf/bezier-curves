@@ -36,6 +36,7 @@ window.onload = function init(){
   ctx = canvas.getContext('2d');
   crect = canvas.getBoundingClientRect();
 
+
 }
 
 document.onmousemove = function(event){
@@ -44,17 +45,17 @@ document.onmousemove = function(event){
 }
 document.onmousedown = function(event){
   mouseDown = true;
-  console.log("mouse pressed");
+
 }
 document.onmouseup = function(event){
   mouseDown = false;
-  console.log("mouse unpressed");
+
 }
 setInterval(mainLoop, 20);
 function mainLoop(){
 
   if (!mouseDown){canvas.style.cursor = "auto";}
-  ctx.fillStyle = 'white';
+  ctx.fillStyle = '#eee';
   ctx.fillRect(0,0,400,400);
 
   ctx.beginPath();
@@ -66,7 +67,7 @@ function mainLoop(){
       if (!mouseDown) {canvas.style.cursor = "pointer";}
 
       if (mouseDown&& canvas.style.cursor == "pointer" && pointGrabbed == null){
-        console.log("button " + p + " is clickable");
+        
         pointGrabbed = points[p];
       }
     }
@@ -80,7 +81,7 @@ function mainLoop(){
       pointGrabbed = null;
     }
 
-    ctx.fillRect(points[p].x - 8, points[p].y - 8, 16,16);
+    ctx.fillRect(points[p].x-16, points[p].y-16, 16,16);
     ctx.fill();
     ctx.beginPath();
 
@@ -88,6 +89,6 @@ function mainLoop(){
 }
 
 function movePointToMouse(point){
-  point.x = pointerX;
-  point.y = pointerY;
+  point.x = Math.max(16,Math.min(400, pointerX));
+  point.y = Math.max(16,Math.min(400, pointerY));
 }
