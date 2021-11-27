@@ -11,6 +11,7 @@ var mouseGrabbed = false;
 var pointGrabbed = null;
 
 let point1 = {
+  //name for debugging purposes only
   name : "point1",
   x : 100,
   y : 100,
@@ -26,17 +27,21 @@ let point3 = {
   name : "point3",
   x : 150,
   y : 50,
-
+}
+let point4 = {
+  name : "point4",
+  x : 250,
+  y : 100,
 }
 
-var points = [point1, point2, point3];
-
+var points = [point1, point2, point3, point4];
+var midpoints = [lerp(point1, point2, 0.4)]
 window.onload = function init(){
   canvas = document.getElementById('canvas');
   ctx = canvas.getContext('2d');
   crect = canvas.getBoundingClientRect();
 
-
+  ctx.textAlign = "center";
 }
 
 document.onmousemove = function(event){
@@ -51,6 +56,8 @@ document.onmouseup = function(event){
   mouseDown = false;
 
 }
+
+
 setInterval(mainLoop, 20);
 function mainLoop(){
 
@@ -58,16 +65,16 @@ function mainLoop(){
   ctx.fillStyle = '#eee';
   ctx.fillRect(0,0,400,400);
 
-  ctx.beginPath();
+
 
   for (var p in points){
+    ctx.beginPath();
     ctx.fillStyle = "#000000";
-    if (Math.abs(pointerX - points[p].x) <= 8 && Math.abs(pointerY - points[p].y) <= 8){
+    if (Math.abs(pointerX-8 - points[p].x) <= 8 && Math.abs(pointerY-8 - points[p].y) <= 8){
       ctx.fillStyle = "#aaaaff";
       if (!mouseDown) {canvas.style.cursor = "pointer";}
 
       if (mouseDown&& canvas.style.cursor == "pointer" && pointGrabbed == null){
-        
         pointGrabbed = points[p];
       }
     }
@@ -81,14 +88,40 @@ function mainLoop(){
       pointGrabbed = null;
     }
 
-    ctx.fillRect(points[p].x-16, points[p].y-16, 16,16);
-    ctx.fill();
-    ctx.beginPath();
+    ctx.fillRect(points[p].x-8, points[p].y-8, 16,16);
 
+    ctx.font = "10px Comic Sans MS";
+    ctx.fillStyle='black';
+    ctx.fillText(points[p].name, points[p].x, points[p].y - 20);
+
+    ctx.fill();
+  }
+  for (var p in midpoints){
+    ctx.fillStyle = "#ff0000";
+    ctx.fillRect(midpoints[p].x-4, midpoints[p].y-4, 8, 8);
   }
 }
 
 function movePointToMouse(point){
-  point.x = Math.max(16,Math.min(400, pointerX));
-  point.y = Math.max(16,Math.min(400, pointerY));
+  point.x = Math.floor(Math.max(8,Math.min(392, pointerX)));
+  point.y = Math.floor(Math.max(8,Math.min(392, pointerY)));
+
+  updateLerps(midpoints);
+}
+
+function lerp(point1, point2, factor){
+  newpoint = {
+    factor : factor,
+    parentpoints: [point1, point2],
+    name : point1.name + " " + point2.name + " factor: " + factor,
+    x : point1.x + (point2.x-point1.x) * factor,
+    y : point1.y + (point2.y-point1.y) * factor
+  }
+  return newpoint;
+}
+
+function updateLerps(points){
+  for (var p in points){
+    points[p] = lerp(points[p].parentpoints[0], points[p].parentpoints[1], points[p].factor);
+  }
 }
