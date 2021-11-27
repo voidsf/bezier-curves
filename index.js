@@ -60,8 +60,6 @@ function mainLoop(){
   ctx.beginPath();
 
   for (var p in points){
-
-
     ctx.fillStyle = "#000000";
     if (Math.abs(pointerX - points[p].x) <= 8 && Math.abs(pointerY - points[p].y) <= 8){
       ctx.fillStyle = "#aaaaff";
@@ -69,12 +67,18 @@ function mainLoop(){
 
       if (mouseDown&& canvas.style.cursor == "pointer" && pointGrabbed == null){
         console.log("button " + p + " is clickable");
+        pointGrabbed = points[p];
       }
     }
     else{
       ctx.fillStyle = "#000088";
     }
-
+    if (pointGrabbed != null){
+      movePointToMouse(pointGrabbed);
+    }
+    if (!mouseDown) {
+      pointGrabbed = null;
+    }
 
     ctx.fillRect(points[p].x - 8, points[p].y - 8, 16,16);
     ctx.fill();
