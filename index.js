@@ -113,12 +113,6 @@ function mainLoop(){
     }
 
     ctx.fillRect(points[p].x-8, points[p].y-8, 16,16);
-
-    ctx.font = "10px Comic Sans MS";
-    ctx.fillStyle='black';
-    ctx.fillText(points[p].name, points[p].x, points[p].y - 20);
-
-    ctx.fill();
   }
 
 
