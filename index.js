@@ -49,6 +49,7 @@ let midpoints = [mpoint1, mpoint2, mpoint3];
 let mms = [mm, mm2];
 let mmm = [mmm1];
 
+var path;
 
 window.onload = function init(){
   canvas = document.getElementById('canvas');
@@ -56,6 +57,9 @@ window.onload = function init(){
   crect = canvas.getBoundingClientRect();
 
   ctx.textAlign = "center";
+
+  path = calcCurve(10);
+
 }
 
 document.onmousemove = function(event){
@@ -74,19 +78,16 @@ document.onmouseup = function(event){
 
 setInterval(mainLoop, 20);
 function mainLoop(){
-  console.log(point1.x + " " + point1.y);
-  console.log(mpoint1.x + " " + mpoint1.y);
 
-  if (!mouseDown){canvas.style.cursor = "auto";}
+  
+
   ctx.fillStyle = '#eee';
   ctx.fillRect(0,0,400,400);
 
-  factor = Math.min(1, factor + 0.001);
-  updateLerps(midpoints, factor);
-  updateLerps(mms, factor);
-  updateLerps(mmm, factor);
+  ctx.lineWidth = "4";
+  ctx.strokeStyle = "#000";
 
-
+  ctx.stroke(path);
 
 
 
@@ -119,22 +120,30 @@ function mainLoop(){
 
     ctx.fill();
   }
-  for (var p in midpoints){
-    ctx.fillStyle = "#ff0000";
-    ctx.fillRect(midpoints[p].x-4, midpoints[p].y-4, 8, 8);
-  }
-  for (var p in mms){
-    ctx.fillStyle = "#ff0000";
-    ctx.fillRect(mms[p].x-4, mms[p].y-4, 8, 8);
-  }
-  ctx.fillStyle = "#00ffff";
-  ctx.fillRect(mmm1.x-4, mmm1.y-4, 8,8);
 
+
+}
+
+function calcCurve(depth){
+  var path = new Path2D();
+  path.moveTo(point1.x, point1.y);
+  for (var factor = 0; factor <= 1; factor += 1/depth){
+    updateLerps(midpoints, factor);
+    updateLerps(mms, factor);
+    updateLerps(mmm, factor);
+
+    console.log(mmm1.x, +" "+ mmm1.y);
+    path.lineTo(mmm1.x, mmm1.y);
+  }
+
+  return path;
 }
 
 function movePointToMouse(point){
   point.x = Math.floor(Math.max(8,Math.min(392, pointerX)));
   point.y = Math.floor(Math.max(8,Math.min(392, pointerY)));
+
+  path = calcCurve(10);
 }
 
 function lerp(point1, point2, factor){
