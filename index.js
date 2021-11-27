@@ -6,6 +6,8 @@ var canvas;
 var crect;
 var ctx;
 
+var factor = 0;
+
 var mouseDown = false;
 var mouseGrabbed = false;
 var pointGrabbed = null;
@@ -21,7 +23,6 @@ let point2 = {
   name : "point2",
   x : 200,
   y : 200,
-
 };
 let point3 = {
   name : "point3",
@@ -34,8 +35,21 @@ let point4 = {
   y : 100,
 }
 
-var points = [point1, point2, point3, point4];
-var midpoints = [lerp(point1, point2, 0.4)]
+let mpoint1 = lerp(point1, point2, factor);
+let mpoint2 = lerp(point2, point3, factor);
+let mpoint3 = lerp(point3, point4, factor);
+
+let mm = lerp(mpoint1, mpoint2, factor);
+let mm2 = lerp(mpoint2, mpoint3, factor);
+
+let mmm1 = lerp(mm, mm2, factor);
+
+let points = [point1, point2, point3, point4];
+let midpoints = [mpoint1, mpoint2, mpoint3];
+let mms = [mm, mm2];
+let mmm = [mmm1];
+
+
 window.onload = function init(){
   canvas = document.getElementById('canvas');
   ctx = canvas.getContext('2d');
@@ -60,10 +74,19 @@ document.onmouseup = function(event){
 
 setInterval(mainLoop, 20);
 function mainLoop(){
+  console.log(point1.x + " " + point1.y);
+  console.log(mpoint1.x + " " + mpoint1.y);
 
   if (!mouseDown){canvas.style.cursor = "auto";}
   ctx.fillStyle = '#eee';
   ctx.fillRect(0,0,400,400);
+
+  factor = Math.min(1, factor + 0.001);
+  updateLerps(midpoints, factor);
+  updateLerps(mms, factor);
+  updateLerps(mmm, factor);
+
+
 
 
 
@@ -100,28 +123,32 @@ function mainLoop(){
     ctx.fillStyle = "#ff0000";
     ctx.fillRect(midpoints[p].x-4, midpoints[p].y-4, 8, 8);
   }
+  for (var p in mms){
+    ctx.fillStyle = "#ff0000";
+    ctx.fillRect(mms[p].x-4, mms[p].y-4, 8, 8);
+  }
+  ctx.fillStyle = "#00ffff";
+  ctx.fillRect(mmm1.x-4, mmm1.y-4, 8,8);
+
 }
 
 function movePointToMouse(point){
   point.x = Math.floor(Math.max(8,Math.min(392, pointerX)));
   point.y = Math.floor(Math.max(8,Math.min(392, pointerY)));
-
-  updateLerps(midpoints);
 }
 
 function lerp(point1, point2, factor){
-  newpoint = {
-    factor : factor,
+  var newpoint = {
     parentpoints: [point1, point2],
-    name : point1.name + " " + point2.name + " factor: " + factor,
     x : point1.x + (point2.x-point1.x) * factor,
     y : point1.y + (point2.y-point1.y) * factor
   }
   return newpoint;
 }
 
-function updateLerps(points){
+function updateLerps(points, factor){
   for (var p in points){
-    points[p] = lerp(points[p].parentpoints[0], points[p].parentpoints[1], points[p].factor);
+    points[p].x = points[p].parentpoints[0].x + (points[p].parentpoints[1].x - points[p].parentpoints[0].x) * factor;
+    points[p].y = points[p].parentpoints[0].y + (points[p].parentpoints[1].y- points[p].parentpoints[0].y) * factor;
   }
 }
