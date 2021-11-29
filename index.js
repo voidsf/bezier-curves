@@ -62,7 +62,7 @@ window.onload = function init(){
 
   path = calcCurve(50);
 
-  document.getElementsByClassName('className')
+  document.getElementById("checkbox").checked = false;
 
 }
 

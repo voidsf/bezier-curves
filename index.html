@@ -8,13 +8,11 @@
     <h1><center>Bezier Curves</center></h1>
     <canvas id="canvas" width="400" height="400"></canvas>
 
-<!-- Rounded switch -->
-<!-- code from w3schools.com -->
-    <label class="switch">
-     <input type="checkbox" onclick="switchLines()">
-     <span class="slider round"></span>
-    </label>
-<!-- code stolen ends -->
+
+
+     <input type="checkbox" id="checkbox" onclick="switchLines()">
+
+
 
     <h2>About bezier curves</h2>
     <h3>Applications in computing</h3>
@@ -23,6 +21,13 @@
       is generally a 'pen tool' allowing you to draw
       fluid lines on your canvas that are easily adjustable.</p>
 
+    <h3>How they are generated</h3>
+    <p>The computer defines 4 points, illustrated by the
+      four squares on the canvas above. It then picks lines between the given
+      points at a certain factor, then traces the path of the new
+      midpoint as the factor increases.</p>
+    <a href=https://web.mit.edu/hyperbook/Patrikalakis-Maekawa-Cho/node12.html>
+      A good representation of the math behind this can be found here on the MIT website.</a>
 
   </body>
 </html>
