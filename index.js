@@ -12,6 +12,8 @@ var mouseDown = false;
 var mouseGrabbed = false;
 var pointGrabbed = null;
 
+var linesVisible = false;
+
 let point1 = {
   //name for debugging purposes only
   name : "point1",
@@ -74,7 +76,12 @@ document.onmouseup = function(event){
   mouseDown = false;
 
 }
+function switchLines(){
 
+  if (linesVisible){
+    linesVisible = false;}
+  else {    linesVisible = true;}
+}
 
 setInterval(mainLoop, 20);
 function mainLoop(){
@@ -84,7 +91,19 @@ function mainLoop(){
   ctx.fillStyle = '#eee';
   ctx.fillRect(0,0,400,400);
 
-  ctx.lineWidth = "4";
+  if (linesVisible){
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = "#aaa";
+    ctx.beginPath();
+    ctx.moveTo(points[2].x, points[2].y);
+    ctx.lineTo(points[3].x, points[3].y);
+    ctx.moveTo(points[0].x, points[0].y);
+    ctx.lineTo(points[1].x, points[1].y);
+    ctx.stroke();
+
+  }
+
+  ctx.lineWidth = 4;
   ctx.strokeStyle = "#000";
 
   ctx.stroke(path);
@@ -94,16 +113,31 @@ function mainLoop(){
   for (var p in points){
     ctx.beginPath();
     ctx.fillStyle = "#000000";
-    if (Math.abs(pointerX-8 - points[p].x) <= 8 && Math.abs(pointerY-8 - points[p].y) <= 8){
-      ctx.fillStyle = "#aaaaff";
-      if (!mouseDown) {canvas.style.cursor = "pointer";}
+    if (p==0||p==3){
+      if (Math.abs(pointerX-8 - points[p].x) <= 8 && Math.abs(pointerY-8 - points[p].y) <= 8){
+        ctx.fillStyle = "#aaaaff";
+        if (!mouseDown) {canvas.style.cursor = "pointer";}
 
-      if (mouseDown&& canvas.style.cursor == "pointer" && pointGrabbed == null){
-        pointGrabbed = points[p];
+        if (mouseDown&& canvas.style.cursor == "pointer" && pointGrabbed == null){
+          pointGrabbed = points[p];
+        }
+      }
+      else{
+        ctx.fillStyle = "#000088";
       }
     }
-    else{
-      ctx.fillStyle = "#000088";
+    else {
+      if (Math.abs(pointerX-8 - points[p].x) <= 8 && Math.abs(pointerY-8 - points[p].y) <= 8){
+        ctx.fillStyle = "#ffaaaa";
+        if (!mouseDown) {canvas.style.cursor = "pointer";}
+
+        if (mouseDown&& canvas.style.cursor == "pointer" && pointGrabbed == null){
+          pointGrabbed = points[p];
+        }
+      }
+      else{
+        ctx.fillStyle = "#880000";
+      }
     }
     if (pointGrabbed != null){
       movePointToMouse(pointGrabbed);
@@ -111,9 +145,14 @@ function mainLoop(){
     if (!mouseDown) {
       pointGrabbed = null;
     }
-
-    ctx.fillRect(points[p].x-8, points[p].y-8, 16,16);
+    if (p==0||p==3){
+    ctx.fillRect(points[p].x-8, points[p].y-8, 16,16);}
+    else{
+      ctx.fillRect(points[p].x-5,points[p].y-5, 10,10);
+    }
   }
+
+
 
 
 }
@@ -126,7 +165,7 @@ function calcCurve(depth){
     updateLerps(mms, factor);
     updateLerps(mmm, factor);
 
-    console.log(mmm1.x, +" "+ mmm1.y);
+
     path.lineTo(mmm1.x, mmm1.y);
   }
   path.lineTo(point4.x, point4.y);
