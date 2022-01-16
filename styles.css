@@ -9,3 +9,7 @@ body {
   text-align: center;
   font-family: Helvetica, sans-serif;
 }
+.info {
+  inline-size: 80%;
+  overflow-wrap: break-word;
+}
