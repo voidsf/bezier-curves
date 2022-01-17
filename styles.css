@@ -10,6 +10,7 @@ body {
   font-family: Helvetica, sans-serif;
 }
 .info {
+  margin: auto;
   inline-size: 80%;
   overflow-wrap: break-word;
 }
